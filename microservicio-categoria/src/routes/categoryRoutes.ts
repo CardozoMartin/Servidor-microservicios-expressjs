@@ -9,7 +9,7 @@ router.get('/', categoryController.getCategory);
 router.get('/:id', categoryController.getCategoryById)
 router.put('/:id', categoryController.updateCategory)
 router.put('/:id', categoryController.softDeleteCategory)
-router.delete('/category/:id', categoryController.deleteCategory)
+router.delete('/:id', categoryController.deleteCategory)
 
 
 export default router;

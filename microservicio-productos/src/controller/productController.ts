@@ -4,9 +4,18 @@ import dotenv from 'dotenv';
 import productoService from "../service/productoService";
 
 dotenv.config();
-const categoryService = process.env.SERVICE_CATEGORY || "http://localhost:3002"; // Corrige esto
+const categoryService = process.env.SERVICE_CATEGORY || "http://localhost:3002/api/category"; // Corrige esto
 
 class ProductController {
+    async getProducts(req: Request, res: Response) {
+        try {
+            const products = await productoService.getProducts();
+            res.status(200).json({ message: "Todos los Productos", products })
+        } catch (error) {
+            res.status(500).json({ message: 'ocurrio un error al obtener los productos' })
+        }
+    }
+
     async postProduct(req: Request, res: Response) {
         try {
             // Validar el cuerpo
@@ -15,7 +24,7 @@ class ProductController {
             }
 
             const categoryId = req.body.category; // "bebidas"
-            console.log(`Verificando categoría en: ${categoryService}/${categoryId}`);
+            console.log("URL de la solicitud:", `${categoryService}/${categoryId}`); 
             const verifyCategory = await axios.get(`${categoryService}/${categoryId}`);
 
             if (!verifyCategory.data) {
@@ -35,6 +44,7 @@ class ProductController {
             res.status(500).json({ message: 'Error al crear el producto', details: error.message });
         }
     }
+
 }
 
 export default new ProductController();

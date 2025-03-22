@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import categoryRoutes from '../routes/categoryRoutes'
 import { errorHandler } from '../middleware/erroHandler';
+import cors from 'cors'
 export class Server {
     //iniciamos las variables de la clase servidor
     private app: Application;
@@ -17,12 +18,19 @@ export class Server {
 
     //iniciamos los middlewares
     middlewares() { 
+        // Add CORS middleware before other middleware
+        this.app.use(cors({
+            origin: 'http://localhost:5173', // Allow requests from your frontend origin
+            methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
+            allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+            credentials: true // If you need to send cookies or auth headers
+        }));
         this.app.use(express.json());
     }
 
     //metodos de rutas
     private routes():void { 
-        this.app.use('/api', categoryRoutes)
+        this.app.use('/api/category', categoryRoutes)
     }
     //manejo de errores
     private handleErrors(){
